@@ -6,13 +6,18 @@
 #include <SoftwareSerial.h>
 #include <SparkFunESP8266WiFi.h>
 
+
+///Ultrsonic configuration of GPIO////
+#define trigPin 13
+#define echoPin 12
+
 //////////////////////////////
 // WiFi Network Definitions //
 //////////////////////////////
 // Replace these two character strings with the name and
 // password of your WiFi network.
-const char mySSID[] = "AP-Name";
-const char myPSK[] = "AP-Password";
+const char mySSID[] = "YOUR ACCESS POINT NAME";
+const char myPSK[] = "YOUR ACCESS POINT password";
 
 //////////////////////////////
 // ESP8266Server definition //
@@ -29,6 +34,9 @@ void setup()
   // Serial Monitor is used to control the demo and view
   // debug information.
   Serial.begin(9600);
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+
   serialTrigger(F("Press any key to begin."));
 
   // initializeESP8266() verifies communication with the WiFi
@@ -41,12 +49,33 @@ void setup()
   // displayConnectInfo prints the Shield's local IP
   // and the network it's connected to.
   displayConnectInfo();
+  Serial.println("Start The ULtrasonic Demo");
 
 }
 
 void loop()
 {
-  Serial.print(".");
+  long duration, distance;
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+  duration = pulseIn(echoPin, HIGH);
+  distance = (duration/2) / 29.1;
+
+  if (distance < 4) {
+      Serial.println("I can't see any thing ...");
+  }
+
+if (distance >= 200 || distance <= 4){
+  Serial.println("Out of range");
+}
+else {
+  Serial.print(distance);
+  Serial.println(" cm");
+}
+delay(500);
 }
 
 void initializeESP8266()
