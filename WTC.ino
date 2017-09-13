@@ -64,12 +64,8 @@ void loop()
   duration = pulseIn(echoPin, HIGH);
   distance = (duration/2) / 29.1;
 
-  if (distance < 4) {
-      Serial.println("I can't see any thing ...");
-  }
-
 if (distance >= 200 || distance <= 4){
-  Serial.println("Out of range");
+  Serial.println("Out of range \n I can't see any thing ..");
 }
 else {
   Serial.print(distance);
